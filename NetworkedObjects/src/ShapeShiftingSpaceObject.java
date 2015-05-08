@@ -12,6 +12,7 @@ public class ShapeShiftingSpaceObject extends SpaceObjectDecorator {
 		// If index is out of bounds, log to console and do nothing.
 		if (index >= this.decoratedObjects.length || index < 0) {
 			System.out.println("ShapeShiftingSpaceObject::switchShape - Index is out of bounds");
+			return;
 		}
 		
 		this.decoratedObject = this.decoratedObjects[index];
