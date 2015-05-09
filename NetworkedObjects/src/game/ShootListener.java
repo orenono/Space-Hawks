@@ -1,3 +1,6 @@
+package game;
+import java.util.Vector;
+
 
 public interface ShootListener {
 

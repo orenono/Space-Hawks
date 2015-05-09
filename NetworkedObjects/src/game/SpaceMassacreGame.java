@@ -1,3 +1,4 @@
+package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Vector;
@@ -18,8 +19,9 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	/**
 	 * The lone 'object' in our simple game.
 	 */
-	Ship ship;
-	Vector <Laser> vecOfLasers = new Vector <Laser>();
+	Ship ship1;
+	Ship ship2;
+	Vector <Laser> vecOfLasersShip = new Vector <Laser>();
 	//we will use a random generator for creating random parameters for each star or alien object.
 	Random randomGenerator = new Random();
 	int randomNumber = randomGenerator.nextInt(30)+1;
@@ -28,16 +30,16 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	//creating 300 stars
 	Star[] stars = new Star[300];
 	
-	public void checkCollisions() {
+	public void checkCollisions(Vector <Laser> laser) {
 		
-		for (int i =0; i < vecOfLasers.size(); i++)
+		for (int i =0; i < laser.size(); i++)
 		{
 			for (int j=0; j < aliens.length; j++)
 			{
-				if (aliens[j].collide(vecOfLasers.elementAt(i)))
+				if (aliens[j].collide(laser.elementAt(i)))
 				{
 					aliens[j].takeHit();
-					vecOfLasers.elementAt(i).hitTarget();
+					laser.elementAt(i).hitTarget();
 				}
 					
 			}
@@ -46,7 +48,7 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	
 	public void shotFired(int x, int y) 
 	{	
-		vecOfLasers.add(new Laser(ship.getOffsetX()+60, ship.getOffsetY()));	
+		vecOfLasersShip.add(new Laser(x + 60, y));	
 	}
 	
 	/**
@@ -61,11 +63,12 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	public SpaceMassacreGame(String name, int inWidth, int inHeight) {
 		super(name, inWidth, inHeight);
 		setBackground(Color.BLACK);
-		int y = 350;
-		int x = 70;
+		int x = inWidth / 10;
+		int y = inHeight / 2;
 		
 		//creating our ship
-		ship = new Ship(x, y, this, this);
+		ship1 = new Ship(x, y - 20, inWidth, inHeight, this, this);
+		ship2 = new Ship(x, y + 20, inWidth, inHeight, this, this);
 		// each star out of the 300 will get random position on the screen
 		for(int i=0; i<stars.length; i++)
 		{
@@ -77,8 +80,8 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 		// each alien will get random parameters for movement, direction, rotation, speed, and starting point
 		for (int i =0 ; i<aliens.length; i++)
 		{	
-			int x1 = 1800;
-			int y1 = randomGenerator.nextInt(700)+70;
+			int x1 = inWidth + 200;
+			int y1 = randomGenerator.nextInt(inHeight)+70;
 			int s1 = randomGenerator.nextInt(30)+5;
 			int r1 = randomGenerator.nextInt(5)+1;
 			//the random generator will create a negative number, in order for the aliens to move west (towards out ship).
@@ -98,12 +101,15 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 		
 		// If constructor has not yet completed, do nothing.
 		// This fixes a NullPointerException that was sometimes thrown
-		if (ship == null) {
+		if (ship1 == null) {
 			return;
 		}
 		// Draw the ship in red
 		g.setColor(Color.RED);
-		ship.paint(g);
+		ship1.paint(g);
+		//draw second ship in green
+		g.setColor(Color.GREEN);
+		ship2.paint(g);
 		// draw the stars in white
 		g.setColor(Color.WHITE);
 		for(int i = 0; i < stars.length; i++)
@@ -117,13 +123,14 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 			aliens[i].paint(g);
 		}
 		g.setColor(Color.RED);
-		for (int i = 0; i<vecOfLasers.size() ; i++)
+		for (int i = 0; i<vecOfLasersShip.size() ; i++)
 		{
-			vecOfLasers.elementAt(i).paint(g);
+			vecOfLasersShip.elementAt(i).paint(g);
 		
 		}
 		
-		checkCollisions();
+		checkCollisions(vecOfLasersShip);
+		
 	}
 
 	/**

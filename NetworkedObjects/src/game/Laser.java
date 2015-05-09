@@ -1,3 +1,4 @@
+package game;
 
 public class Laser extends SpaceObjectDecorator{
 

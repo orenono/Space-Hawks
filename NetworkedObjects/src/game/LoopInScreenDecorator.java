@@ -1,3 +1,4 @@
+package game;
 /**
  * 
  * this decorator will give a spaceObject the function to return into the screen once it left the screen-- returning from the other side
@@ -38,5 +39,7 @@ public class LoopInScreenDecorator extends SpaceObjectDecorator {
 			move(0, 0 - (int)offset.y);
 		}
 	}
+	
+	public Point getOffset() { return this.offset; }
 
 }

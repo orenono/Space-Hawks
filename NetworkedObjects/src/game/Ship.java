@@ -1,3 +1,4 @@
+package game;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
@@ -14,8 +15,6 @@ public class Ship extends ControlledObject {
 	
 	private int moveUpAndDown;
 	private int moveLeftAndRight;
-	private int offsetX = 0;
-	private int offsetY = 0;
 	private ShootListener shootListener;
 	
 	
@@ -23,13 +22,11 @@ public class Ship extends ControlledObject {
 	
 	private static Point[] shipShape = { new Point(245, 100), new Point(190, 90), new Point(150, 100), new Point(190, 110) };
 	
-	public Ship(int x, int y, JComponent keyDispatcher, ShootListener s) 
+	public Ship(int x, int y, int width, int height, JComponent keyDispatcher, ShootListener s) 
 	{
 		
-		super(new SimpleSpaceObject(shipShape, new Point(x, y), 0), keyDispatcher);
+		super(new LoopInScreenDecorator(new SimpleSpaceObject(shipShape, new Point(x, y), 0), new Point(x, y), width, height), keyDispatcher);
 		this.shootListener = s;
-		offsetX = x;
-		offsetY = y;
 	}
 	
 	public void moveUp()
@@ -48,11 +45,11 @@ public class Ship extends ControlledObject {
 	}
 	public int getOffsetX()
 	{
-		return offsetX;
+		return (int)((LoopInScreenDecorator)decoratedObject).getOffset().x;
 	}
 	public int getOffsetY()
 	{
-		return offsetY;
+		return (int)((LoopInScreenDecorator)decoratedObject).getOffset().y;
 	}
 
 
@@ -62,8 +59,6 @@ public class Ship extends ControlledObject {
 	public void paint(Graphics g) {
 		decoratedObject.paint(g); 
 		decoratedObject.move(moveLeftAndRight, moveUpAndDown);
-		offsetX += moveLeftAndRight;
-		offsetY += moveUpAndDown;
 	}
 	
 	@Override
@@ -79,7 +74,7 @@ public class Ship extends ControlledObject {
 		else if (e.getKeyCode() == KeyEvent.VK_K)
 			moveDown();
    		else if(e.getKeyCode() == KeyEvent.VK_SPACE)
-			shootListener.shotFired(offsetX, offsetY);
+			shootListener.shotFired(getOffsetX(), getOffsetY());
    		else if (e.getKeyCode() == KeyEvent.VK_K && e.getKeyCode()== KeyEvent.VK_O)
 			stop();
 	}

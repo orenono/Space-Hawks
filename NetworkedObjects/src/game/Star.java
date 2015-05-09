@@ -1,3 +1,4 @@
+package game;
 /**
  * 
  * this is the creation of a star object
