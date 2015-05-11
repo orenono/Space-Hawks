@@ -1,5 +1,6 @@
 package gameClient;
 
+import java.awt.Color;
 import java.io.IOException;
 
 import game.Ship;
@@ -19,7 +20,7 @@ public class GamePanel extends SpaceMassacreGame {
 		this.session = session;
 	}
 	
-	private void sendMessage(Object msg) {
+	protected void sendMessage(Object msg) {
 		try {
 			this.session.getBasicRemote().sendObject(msg);
 		} catch (IOException | EncodeException e) {
@@ -28,11 +29,11 @@ public class GamePanel extends SpaceMassacreGame {
 	}
 	
 	@Override
-	public void shotFired(int x, int y) {
-		sendMessage(new LaserShotMessage(x, y));
+	public void shotFired(int x, int y, Color color) {
+		sendMessage(new LaserShotMessage(x, y, color));
 	}
 	
-	public void displayLaser(int x, int y) {
-		super.shotFired(x, y);
+	public void displayLaser(int x, int y, Color color) {
+		super.shotFired(x, y, color);
 	}
 }

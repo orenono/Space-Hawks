@@ -13,7 +13,9 @@ public class ControlledObject extends SpaceObjectDecorator implements KeyListene
 
 	public ControlledObject(SpaceObject obj, JComponent jc) {
 		super(obj);
-		jc.addKeyListener(this);
+		if (jc != null) {
+			jc.addKeyListener(this);
+		}
 	}
 	
 	@Override

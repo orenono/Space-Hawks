@@ -18,15 +18,27 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(value = "/game",
 				decoders = { MessageDecoder.class }, 
 				encoders = {
-					LaserShotMessageEncoder.class 
+					LaserShotMessageEncoder.class,
+					ClientConnectedMessageEncoder.class
 				})
 	public class GameServerEndpoint{
  
     private Logger logger = Logger.getLogger(this.getClass().getName());
+    private static int connetedClients = 0;
  
     @OnOpen
-    public void onOpen(Session peer) {
+    public void onOpen(Session peer) throws EncodeException {
         logger.info("Connected ... " + peer.getId());
+        connetedClients++;
+        
+        for (Session other : peer.getOpenSessions()) {
+            try {
+                other.getBasicRemote().sendObject(new ClientConnectedMessage(connetedClients));
+            } catch (IOException ex) {
+                Logger.getLogger(GameServerEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
     }
  
     @OnMessage
@@ -46,6 +58,7 @@ import javax.websocket.server.ServerEndpoint;
     @OnClose
     public void onClose(Session session, CloseReason closeReason) {
         logger.info(String.format("Session %s closed because of %s", session.getId(), closeReason));
+        connetedClients--;
     }
     
  

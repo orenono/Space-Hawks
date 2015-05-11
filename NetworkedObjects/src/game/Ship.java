@@ -1,4 +1,5 @@
 package game;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
@@ -16,16 +17,18 @@ public class Ship extends ControlledObject {
 	private int moveUpAndDown;
 	private int moveLeftAndRight;
 	private ShootListener shootListener;
+	private Color color;
 	
 	
 	// creating the shapes for the ship and the laser it shoots
 	
 	private static Point[] shipShape = { new Point(245, 100), new Point(190, 90), new Point(150, 100), new Point(190, 110) };
 	
-	public Ship(int x, int y, int width, int height, JComponent keyDispatcher, ShootListener s) 
+	public Ship(int x, int y, int width, int height, Color color, JComponent keyDispatcher, ShootListener s) 
 	{
 		
-		super(new LoopInScreenDecorator(new SimpleSpaceObject(shipShape, new Point(x, y), 0), new Point(x, y), width, height), keyDispatcher);
+		super(new LoopInScreenDecorator(new ColorSpaceObject(new SimpleSpaceObject(shipShape, new Point(x, y), 0), color), new Point(x, y), width, height), keyDispatcher);
+		this.color = color;
 		this.shootListener = s;
 	}
 	
@@ -74,7 +77,7 @@ public class Ship extends ControlledObject {
 		else if (e.getKeyCode() == KeyEvent.VK_K)
 			moveDown();
    		else if(e.getKeyCode() == KeyEvent.VK_SPACE)
-			shootListener.shotFired(getOffsetX(), getOffsetY());
+			shootListener.shotFired(getOffsetX(), getOffsetY(), color);
    		else if (e.getKeyCode() == KeyEvent.VK_K && e.getKeyCode()== KeyEvent.VK_O)
 			stop();
 	}

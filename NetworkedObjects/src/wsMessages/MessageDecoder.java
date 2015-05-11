@@ -1,5 +1,6 @@
 package wsMessages;
 
+import java.awt.Color;
 import java.io.StringReader;
 
 import javax.json.*;
@@ -15,7 +16,10 @@ public class MessageDecoder implements Decoder.Text<Message> {
 				.readObject();
 
 		if (jsonObject.getString("type").equals(LaserShotMessage.class.getName())) {
-			LaserShotMessage message = new LaserShotMessage(jsonObject.getInt("x"), jsonObject.getInt("y"));
+			LaserShotMessage message = new LaserShotMessage(jsonObject.getInt("x"), jsonObject.getInt("y"), new Color(jsonObject.getInt("color")));
+			return message;
+		} else if (jsonObject.getString("type").equals(ClientConnectedMessage.class.getName())) {
+			ClientConnectedMessage message = new ClientConnectedMessage(jsonObject.getInt("clientsCount"));
 			return message;
 		} else {
 			throw new DecodeException(msg, "Unknown message");

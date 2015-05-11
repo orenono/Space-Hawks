@@ -29,6 +29,8 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	EvilAlien1[] aliens = new EvilAlien1[8];
 	//creating 300 stars
 	Star[] stars = new Star[300];
+	int width = 854;
+	int height = 480;
 	
 	public void checkCollisions(Vector <Laser> laser) {
 		
@@ -46,9 +48,9 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 		}
 	}
 	
-	public void shotFired(int x, int y) 
+	public void shotFired(int x, int y, Color color) 
 	{	
-		vecOfLasersShip.add(new Laser(x + 60, y));	
+		vecOfLasersShip.add(new Laser(x + 60, y, color));	
 	}
 	
 	/**
@@ -63,12 +65,10 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	public SpaceMassacreGame(String name, int inWidth, int inHeight) {
 		super(name, inWidth, inHeight);
 		setBackground(Color.BLACK);
-		int x = inWidth / 10;
-		int y = inHeight / 2;
 		
-		//creating our ship
-		ship1 = new Ship(x, y - 20, inWidth, inHeight, this, this);
-		ship2 = new Ship(x, y + 20, inWidth, inHeight, this, this);
+		this.width = inWidth;
+		this.height = inHeight;
+		
 		// each star out of the 300 will get random position on the screen
 		for(int i=0; i<stars.length; i++)
 		{
@@ -105,11 +105,13 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 			return;
 		}
 		// Draw the ship in red
-		g.setColor(Color.RED);
-		ship1.paint(g);
+		if (ship1 != null) {
+			ship1.paint(g);
+		}
 		//draw second ship in green
-		g.setColor(Color.GREEN);
-		ship2.paint(g);
+		if (ship2 != null) {
+			ship2.paint(g);
+		}
 		// draw the stars in white
 		g.setColor(Color.WHITE);
 		for(int i = 0; i < stars.length; i++)
@@ -131,6 +133,16 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 		
 		checkCollisions(vecOfLasersShip);
 		
+	}
+	
+	public void setPlayer(int playerNumber)
+	{
+		int x = width / 10;
+		int y = height / 2;
+		
+		//creating our ships
+		ship1 = new Ship(x, y - 20, width, height, Color.RED, playerNumber == 1 ? this : null, this);
+		ship2 = new Ship(x, y + 20, width, height, Color.GREEN, playerNumber == 2 ? this : null, this);
 	}
 
 	/**

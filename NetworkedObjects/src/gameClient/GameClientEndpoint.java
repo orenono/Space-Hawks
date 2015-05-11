@@ -23,6 +23,8 @@ import javax.websocket.Session;
 
 import org.glassfish.tyrus.client.ClientManager;
 
+import wsMessages.ClientConnectedMessage;
+import wsMessages.ClientConnectedMessageEncoder;
 import wsMessages.LaserShotMessage;
 import wsMessages.LaserShotMessageEncoder;
 import wsMessages.Message;
@@ -43,12 +45,15 @@ import wsMessages.MessageDecoder;
 			MessageDecoder.class 
 		},
 		encoders = {
-			LaserShotMessageEncoder.class 
+			LaserShotMessageEncoder.class,
+			ClientConnectedMessageEncoder.class
 		})
 public class GameClientEndpoint {
 	private static CountDownLatch latch;
 	private Logger logger = Logger.getLogger(this.getClass().getName());
-	private static GamePanel gamePanel;
+	private boolean gameStarted = false;
+	private GamePanel gamePanel;
+	private static Session peer;
 
 	@OnOpen
 	public void onOpen(Session session) {
@@ -64,8 +69,13 @@ public class GameClientEndpoint {
 	public void onMessage(Session session, Message message) {
 		logger.info("Received ...." + message.toString());
 
-		if (message instanceof LaserShotMessage) {
-			gamePanel.displayLaser(((LaserShotMessage)message).getX(), ((LaserShotMessage)message).getY());
+		if (message instanceof ClientConnectedMessage) {
+			if (!gameStarted) {
+				gameStarted = true;
+				createAndShowGUI(peer, ((ClientConnectedMessage)message).getClientsCount());
+			}
+		} else if (message instanceof LaserShotMessage) {
+			gamePanel.displayLaser(((LaserShotMessage)message).getX(), ((LaserShotMessage)message).getY(), ((LaserShotMessage)message).getColor());
 		}
 	}
 
@@ -79,12 +89,10 @@ public class GameClientEndpoint {
 	public static void main(String[] args) {
 		latch = new CountDownLatch(1);
 
-		Session peer;
 		ClientManager client = ClientManager.createClient();
 		try {
 			peer = client.connectToServer(GameClientEndpoint.class, new URI(
 					"ws://localhost:8025/websockets/game"));
-			createAndShowGUI(peer);
 			latch.await();
 
 		} catch (DeploymentException | URISyntaxException
@@ -93,9 +101,11 @@ public class GameClientEndpoint {
 		}
 	}
 
-	private static void createAndShowGUI(Session session) {
+	private void createAndShowGUI(Session session, int playerNumber) {
+		logger.info("CREATING GAME FOR PLAYER #" + playerNumber);
 		gamePanel = new GamePanel(session);
 		gamePanel.requestFocus();
+		gamePanel.setPlayer(playerNumber);
 		gamePanel.startGame();
 	}
 }

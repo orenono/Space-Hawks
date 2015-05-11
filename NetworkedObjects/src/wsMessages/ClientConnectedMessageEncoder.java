@@ -1,19 +1,18 @@
 package wsMessages;
 
-import javax.json.*;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-public class LaserShotMessageEncoder implements Encoder.Text<LaserShotMessage> {
+public class ClientConnectedMessageEncoder implements Encoder.Text<ClientConnectedMessage> {
 
 	@Override
-	public String encode(LaserShotMessage msg) throws EncodeException {
+	public String encode(ClientConnectedMessage msg) throws EncodeException {
 		JsonObject jsonProdMessage = Json.createObjectBuilder()
 				.add("type", msg.getClass().getName())
-				.add("x", msg.getX())
-                .add("y", msg.getY())
-                .add("color", msg.getColor().getRGB())
+				.add("clientsCount", msg.getClientsCount())
                 .build();
 
         return jsonProdMessage.toString();
@@ -26,4 +25,5 @@ public class LaserShotMessageEncoder implements Encoder.Text<LaserShotMessage> {
 	@Override
 	public void init(EndpointConfig arg0) {
 	}
+
 }
