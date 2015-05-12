@@ -14,7 +14,7 @@ import java.util.Random;
  * @author sdexter72
  * @author Oren Lahav
  */
-public class SpaceMassacreGame extends Game implements ShootListener{
+public class SpaceMassacreGame extends Game implements GameEventsListener{
 
 	/**
 	 * The lone 'object' in our simple game.
@@ -32,6 +32,11 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	int width = 854;
 	int height = 480;
 	
+	/**
+	 * a method to check whether a certain object's shape contains the same points as another object's shape, which in our case 
+	 * will cause a collision
+	 * @param laser
+	 */
 	public void checkCollisions(Vector <Laser> laser) {
 		
 		for (int i =0; i < laser.size(); i++)
@@ -51,6 +56,16 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 	public void shotFired(int x, int y, Color color) 
 	{	
 		vecOfLasersShip.add(new Laser(x + 60, y, color));	
+	}
+	
+	public void shipMoved(int x, int y, int shipNumber) {
+			if (shipNumber == 1) {
+				ship1.move(x, y);
+			} else {
+				ship2.move(x, y);
+			}
+		
+		
 	}
 	
 	/**
@@ -141,8 +156,8 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 		int y = height / 2;
 		
 		//creating our ships
-		ship1 = new Ship(x, y - 20, width, height, Color.RED, playerNumber == 1 ? this : null, this);
-		ship2 = new Ship(x, y + 20, width, height, Color.GREEN, playerNumber == 2 ? this : null, this);
+		ship1 = new Ship(x, y - 20, width, height, Color.RED, playerNumber == 1 ? this : null, this, playerNumber);
+		ship2 = new Ship(x, y + 20, width, height, Color.GREEN, playerNumber == 2 ? this : null, this, playerNumber);
 	}
 
 	/**
@@ -160,5 +175,10 @@ public class SpaceMassacreGame extends Game implements ShootListener{
 		game.startGame();
 
 	}
+
+
+
+
+
 
 }

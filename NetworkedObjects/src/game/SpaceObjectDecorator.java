@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
  * decoratedObject, but specific decorators will override this.
  * 
  * @author sdexter72
- *
+ * @author orenono
  */
 
 public abstract class SpaceObjectDecorator implements SpaceObject {

@@ -1,6 +1,9 @@
 package wsMessages;
 
 import java.awt.Color;
+/**
+ * @author orenono
+ */
 
 public class LaserShotMessage extends Message {
 

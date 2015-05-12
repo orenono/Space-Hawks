@@ -7,7 +7,11 @@ import javax.json.*;
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
-
+/**
+ * 
+ * @author orenono
+ *
+ */
 public class MessageDecoder implements Decoder.Text<Message> {
 
 	@Override
@@ -17,6 +21,9 @@ public class MessageDecoder implements Decoder.Text<Message> {
 
 		if (jsonObject.getString("type").equals(LaserShotMessage.class.getName())) {
 			LaserShotMessage message = new LaserShotMessage(jsonObject.getInt("x"), jsonObject.getInt("y"), new Color(jsonObject.getInt("color")));
+			return message;
+		} else if (jsonObject.getString("type").equals(ShipMovedMessage.class.getName())) {
+			ShipMovedMessage message = new ShipMovedMessage(jsonObject.getInt("x"), jsonObject.getInt("y"), jsonObject.getInt("shipNumber"));
 			return message;
 		} else if (jsonObject.getString("type").equals(ClientConnectedMessage.class.getName())) {
 			ClientConnectedMessage message = new ClientConnectedMessage(jsonObject.getInt("clientsCount"));

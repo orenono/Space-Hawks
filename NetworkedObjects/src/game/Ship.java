@@ -16,7 +16,8 @@ public class Ship extends ControlledObject {
 	
 	private int moveUpAndDown;
 	private int moveLeftAndRight;
-	private ShootListener shootListener;
+	private int shipNumber;
+	private GameEventsListener gameListener;
 	private Color color;
 	
 	
@@ -24,12 +25,13 @@ public class Ship extends ControlledObject {
 	
 	private static Point[] shipShape = { new Point(245, 100), new Point(190, 90), new Point(150, 100), new Point(190, 110) };
 	
-	public Ship(int x, int y, int width, int height, Color color, JComponent keyDispatcher, ShootListener s) 
+	public Ship(int x, int y, int width, int height, Color color, JComponent keyDispatcher, GameEventsListener gameListener, int shipNumber) 
 	{
 		
 		super(new LoopInScreenDecorator(new ColorSpaceObject(new SimpleSpaceObject(shipShape, new Point(x, y), 0), color), new Point(x, y), width, height), keyDispatcher);
 		this.color = color;
-		this.shootListener = s;
+		this.gameListener = gameListener;
+		this.shipNumber = shipNumber;
 	}
 	
 	public void moveUp()
@@ -72,19 +74,25 @@ public class Ship extends ControlledObject {
 	//when space bar is pressed, our ship will fire a laser beam
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_O) 
+		if(e.getKeyCode() == KeyEvent.VK_O) {
 			moveUp();
-		else if (e.getKeyCode() == KeyEvent.VK_K)
+			gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_K){
 			moveDown();
+			gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
+		}
    		else if(e.getKeyCode() == KeyEvent.VK_SPACE)
-			shootListener.shotFired(getOffsetX(), getOffsetY(), color);
+   			gameListener.shotFired(getOffsetX(), getOffsetY(), color);
    		else if (e.getKeyCode() == KeyEvent.VK_K && e.getKeyCode()== KeyEvent.VK_O)
 			stop();
+		gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_O || e.getKeyCode() == KeyEvent.VK_K)
-			stop();			
+			stop();
+		gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
 	}
 }

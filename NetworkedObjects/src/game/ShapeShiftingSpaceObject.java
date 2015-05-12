@@ -1,8 +1,13 @@
 package game;
-
+/**
+ * This is a decorator that will be used for any object that could change his shape, if a certain action occurred
+ * @author orenono
+ *
+ */
 public class ShapeShiftingSpaceObject extends SpaceObjectDecorator {
 
 	protected SpaceObject[] decoratedObjects;
+	
 	public ShapeShiftingSpaceObject(SpaceObject[] objects) {
 		super(objects[0]);
 		decoratedObjects = objects;

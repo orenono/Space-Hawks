@@ -1,5 +1,8 @@
-package gameClient;
 
+package gameClient;
+/**
+ * @author orenono
+ */
 import java.awt.Color;
 import java.io.IOException;
 
@@ -10,6 +13,7 @@ import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 import wsMessages.LaserShotMessage;
+import wsMessages.ShipMovedMessage;
 
 
 public class GamePanel extends SpaceMassacreGame {
@@ -36,4 +40,13 @@ public class GamePanel extends SpaceMassacreGame {
 	public void displayLaser(int x, int y, Color color) {
 		super.shotFired(x, y, color);
 	}
+	
+	public void shipMoved( int x, int y, int shipNumber){
+		sendMessage(new ShipMovedMessage (x, y, shipNumber));
+	}
+	
+	public void displayShip(int x, int y, int shipNumber){
+		super.shipMoved(x, y, shipNumber);
+	}
+	
 }

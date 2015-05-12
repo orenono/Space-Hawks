@@ -9,9 +9,10 @@ import wsMessages.*;
 import javax.websocket.server.ServerEndpoint;
 
 /**
- * What does this server do when it receives a message from a client?
+ * 
  * 
  * @author sdexter72
+ * @author orenono
  *
  */
  
@@ -19,7 +20,8 @@ import javax.websocket.server.ServerEndpoint;
 				decoders = { MessageDecoder.class }, 
 				encoders = {
 					LaserShotMessageEncoder.class,
-					ClientConnectedMessageEncoder.class
+					ClientConnectedMessageEncoder.class,
+					ShipMovedMessageEncoder.class
 				})
 	public class GameServerEndpoint{
  

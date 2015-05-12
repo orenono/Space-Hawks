@@ -29,15 +29,13 @@ import wsMessages.LaserShotMessage;
 import wsMessages.LaserShotMessageEncoder;
 import wsMessages.Message;
 import wsMessages.MessageDecoder;
+import wsMessages.ShipMovedMessage;
+import wsMessages.ShipMovedMessageEncoder;
 
 /**
- * This class combines (a bit awkwardly) GUI setup code and WebSockets
- * client-endpoint code. Note that most of the user interaction is handled by
- * the MessagePanel class. Note how the onMessage() method decides what to do
- * depending on the type of message received.
  * 
  * @author sdexter72
- *
+ * @author orenono
  */
 
 @ClientEndpoint(
@@ -46,7 +44,8 @@ import wsMessages.MessageDecoder;
 		},
 		encoders = {
 			LaserShotMessageEncoder.class,
-			ClientConnectedMessageEncoder.class
+			ClientConnectedMessageEncoder.class,
+			ShipMovedMessageEncoder.class
 		})
 public class GameClientEndpoint {
 	private static CountDownLatch latch;
@@ -74,8 +73,14 @@ public class GameClientEndpoint {
 				gameStarted = true;
 				createAndShowGUI(peer, ((ClientConnectedMessage)message).getClientsCount());
 			}
+			
+			if (((ClientConnectedMessage)message).getClientsCount() == 2) {
+				gamePanel.startGame();
+			}
 		} else if (message instanceof LaserShotMessage) {
 			gamePanel.displayLaser(((LaserShotMessage)message).getX(), ((LaserShotMessage)message).getY(), ((LaserShotMessage)message).getColor());
+		} else if (message instanceof ShipMovedMessage) {
+			gamePanel.displayShip(((ShipMovedMessage)message).getX(), ((ShipMovedMessage)message).getY(),((ShipMovedMessage)message).getShipNumber());
 		}
 	}
 
@@ -106,6 +111,5 @@ public class GameClientEndpoint {
 		gamePanel = new GamePanel(session);
 		gamePanel.requestFocus();
 		gamePanel.setPlayer(playerNumber);
-		gamePanel.startGame();
 	}
 }

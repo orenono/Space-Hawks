@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
  * Our design assumes that a SpaceObject 'floats' in two-dimensional space. 
  * 
  * @author sdexter72
- *
+ * @author orenono
  */
 
 public interface SpaceObject {
