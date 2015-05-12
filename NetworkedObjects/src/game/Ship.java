@@ -36,12 +36,15 @@ public class Ship extends ControlledObject {
 	
 	public void moveUp()
 	{
-		moveUpAndDown -= 5;	
+		moveUpAndDown -= 10;	
+		
+		
 	}
 	
 	public void moveDown()
 	{
-		moveUpAndDown += 5;
+		moveUpAndDown += 10;
+		
 	}
 	
 	public void stop()
@@ -74,25 +77,30 @@ public class Ship extends ControlledObject {
 	//when space bar is pressed, our ship will fire a laser beam
 	@Override
 	public void keyPressed(KeyEvent e) {
+		
+		 if(e.getKeyCode() == KeyEvent.VK_SPACE)
+   			gameListener.shotFired(getOffsetX(), getOffsetY(), color);
+		
+	}
+	//I wanted to set the ships to move one step at a time (instead of continuously while keys are pressed)
+	// for some reason using 'keyTyped' didn't work well. But this method sort of works...
+	@Override
+	public void keyReleased(KeyEvent e) {
+		
 		if(e.getKeyCode() == KeyEvent.VK_O) {
 			moveUp();
 			gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_K){
+			if(e.getKeyCode() == KeyEvent.VK_O || e.getKeyCode() == KeyEvent.VK_K)
+				stop();
+			gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
+			}
+		
+		else if (e.getKeyCode() == KeyEvent.VK_K) {
 			moveDown();
 			gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
-		}
-   		else if(e.getKeyCode() == KeyEvent.VK_SPACE)
-   			gameListener.shotFired(getOffsetX(), getOffsetY(), color);
-   		else if (e.getKeyCode() == KeyEvent.VK_K && e.getKeyCode()== KeyEvent.VK_O)
+			if(e.getKeyCode() == KeyEvent.VK_O || e.getKeyCode() == KeyEvent.VK_K)
 			stop();
-		gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
-	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_O || e.getKeyCode() == KeyEvent.VK_K)
-			stop();
-		gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
+			gameListener.shipMoved(0, moveUpAndDown, this.shipNumber);
+			}
 	}
 }
