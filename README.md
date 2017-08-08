@@ -1,3 +1,3 @@
 # README.md
 
-A space shooter written in Java. Network play is enabled using websockets.
+A websocket realtime 2 player space shooter project
